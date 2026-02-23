@@ -1,0 +1,666 @@
+{
+  "id": null,
+  "uid": "aetherwatch-fleet",
+  "title": "AetherWatch - Fleet Monitoring",
+  "tags": [
+    "aetherwatch",
+    "drones",
+    "fleet"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 16,
+  "version": 0,
+  "refresh": "5s",
+  "panels": [
+    {
+      "id": 1,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "type": "stat",
+      "title": "Fleet Health Score",
+      "targets": [
+        {
+          "expr": "aetherwatch_fleet_mission_success_rate",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": 0,
+                "color": "red"
+              },
+              {
+                "value": 50,
+                "color": "yellow"
+              },
+              {
+                "value": 80,
+                "color": "green"
+              }
+            ]
+          }
+        }
+      },
+      "options": {
+        "graphMode": "area",
+        "colorMode": "value"
+      }
+    },
+    {
+      "id": 2,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "type": "stat",
+      "title": "Active Drones",
+      "targets": [
+        {
+          "expr": "aetherwatch_fleet_active_drones",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": 0,
+                "color": "red"
+              },
+              {
+                "value": 5,
+                "color": "yellow"
+              },
+              {
+                "value": 8,
+                "color": "green"
+              }
+            ]
+          }
+        }
+      },
+      "options": {
+        "graphMode": "area",
+        "colorMode": "value"
+      }
+    },
+    {
+      "id": 3,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
+      "type": "stat",
+      "title": "Average Battery Level",
+      "targets": [
+        {
+          "expr": "aetherwatch_fleet_battery_average",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": 0,
+                "color": "red"
+              },
+              {
+                "value": 20,
+                "color": "yellow"
+              },
+              {
+                "value": 50,
+                "color": "green"
+              }
+            ]
+          }
+        }
+      },
+      "options": {
+        "graphMode": "area",
+        "colorMode": "value"
+      }
+    },
+    {
+      "id": 4,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "type": "stat",
+      "title": "Total Drones",
+      "targets": [
+        {
+          "expr": "aetherwatch_fleet_total_drones",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        }
+      },
+      "options": {
+        "graphMode": "none",
+        "colorMode": "value"
+      }
+    },
+    {
+      "id": 5,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "type": "stat",
+      "title": "Missions Completed (Last 5m)",
+      "targets": [
+        {
+          "expr": "increase(aetherwatch_fleet_missions_completed_total[5m])",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        }
+      },
+      "options": {
+        "graphMode": "area",
+        "colorMode": "value"
+      }
+    },
+    {
+      "id": 6,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "type": "stat",
+      "title": "Total Deliveries",
+      "targets": [
+        {
+          "expr": "sum(aetherwatch_drone_deliveries_total)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        }
+      },
+      "options": {
+        "graphMode": "area",
+        "colorMode": "value"
+      }
+    },
+    {
+      "id": 7,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "type": "graph",
+      "title": "Mission Completion Rate",
+      "targets": [
+        {
+          "expr": "rate(aetherwatch_fleet_missions_completed_total[1m])",
+          "refId": "A",
+          "legendFormat": "Completions/sec"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "Rate"
+        },
+        {
+          "format": "short",
+          "show": true
+        }
+      ],
+      "xaxis": {
+        "show": true,
+        "mode": "time"
+      },
+      "lines": true,
+      "fill": 1,
+      "linewidth": 2,
+      "pointradius": 2,
+      "points": false,
+      "bars": false,
+      "stack": false,
+      "percentage": false,
+      "legend": {
+        "show": true,
+        "values": true,
+        "current": true,
+        "alignAsTable": true,
+        "rightSide": false
+      },
+      "nullPointMode": "null",
+      "steppedLine": false,
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      }
+    },
+    {
+      "id": 8,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "type": "graph",
+      "title": "Mission Throughput (Submissions vs Completions)",
+      "targets": [
+        {
+          "expr": "rate(aetherwatch_fleet_missions_total[1m])",
+          "refId": "A",
+          "legendFormat": "Submissions/sec"
+        },
+        {
+          "expr": "rate(aetherwatch_fleet_missions_completed_total[1m])",
+          "refId": "B",
+          "legendFormat": "Completions/sec"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "Rate"
+        },
+        {
+          "format": "short",
+          "show": true
+        }
+      ],
+      "xaxis": {
+        "show": true,
+        "mode": "time"
+      },
+      "lines": true,
+      "fill": 1,
+      "linewidth": 2,
+      "pointradius": 2,
+      "points": false,
+      "bars": false,
+      "stack": false,
+      "percentage": false,
+      "legend": {
+        "show": true,
+        "values": true,
+        "current": true,
+        "alignAsTable": true,
+        "rightSide": false
+      },
+      "nullPointMode": "null",
+      "steppedLine": false,
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      }
+    },
+    {
+      "id": 9,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 25
+      },
+      "type": "graph",
+      "title": "Drone Battery Levels",
+      "targets": [
+        {
+          "expr": "aetherwatch_drone_battery_level",
+          "refId": "A",
+          "legendFormat": "{{drone_id}}"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "percent",
+          "label": "Battery",
+          "min": 0,
+          "max": 100
+        },
+        {
+          "format": "short",
+          "show": true
+        }
+      ],
+      "xaxis": {
+        "show": true,
+        "mode": "time"
+      },
+      "lines": true,
+      "fill": 1,
+      "linewidth": 2,
+      "pointradius": 2,
+      "points": false,
+      "bars": false,
+      "stack": false,
+      "percentage": false,
+      "legend": {
+        "show": true,
+        "values": true,
+        "current": true,
+        "alignAsTable": true,
+        "rightSide": true
+      },
+      "nullPointMode": "null",
+      "steppedLine": false,
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      }
+    },
+    {
+      "id": 10,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 25
+      },
+      "type": "graph",
+      "title": "Cumulative Missions by Drone",
+      "targets": [
+        {
+          "expr": "aetherwatch_missions_completed_total",
+          "refId": "A",
+          "legendFormat": "{{drone_id}}"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "Missions"
+        },
+        {
+          "format": "short",
+          "show": true
+        }
+      ],
+      "xaxis": {
+        "show": true,
+        "mode": "time"
+      },
+      "lines": true,
+      "fill": 0,
+      "linewidth": 2,
+      "pointradius": 2,
+      "points": false,
+      "bars": false,
+      "stack": false,
+      "percentage": false,
+      "legend": {
+        "show": true,
+        "values": true,
+        "current": true,
+        "alignAsTable": true,
+        "rightSide": true
+      },
+      "nullPointMode": "null",
+      "steppedLine": false,
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      }
+    },
+    {
+      "id": 11,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 34
+      },
+      "type": "graph",
+      "title": "Cumulative Deliveries by Drone",
+      "targets": [
+        {
+          "expr": "aetherwatch_drone_deliveries_total",
+          "refId": "A",
+          "legendFormat": "{{drone_id}}"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "Deliveries"
+        },
+        {
+          "format": "short",
+          "show": true
+        }
+      ],
+      "xaxis": {
+        "show": true,
+        "mode": "time"
+      },
+      "lines": true,
+      "fill": 0,
+      "linewidth": 2,
+      "pointradius": 2,
+      "points": false,
+      "bars": false,
+      "stack": false,
+      "percentage": false,
+      "legend": {
+        "show": true,
+        "values": true,
+        "current": true,
+        "alignAsTable": true,
+        "rightSide": true
+      },
+      "nullPointMode": "null",
+      "steppedLine": false,
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      }
+    },
+    {
+      "id": 12,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 34
+      },
+      "type": "graph",
+      "title": "Drone Status Changes Rate",
+      "targets": [
+        {
+          "expr": "rate(aetherwatch_drone_status_change_total[5m])",
+          "refId": "A",
+          "legendFormat": "{{drone_id}} - {{new_status}}"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "Changes/sec"
+        },
+        {
+          "format": "short",
+          "show": true
+        }
+      ],
+      "xaxis": {
+        "show": true,
+        "mode": "time"
+      },
+      "lines": true,
+      "fill": 1,
+      "linewidth": 1,
+      "pointradius": 2,
+      "points": false,
+      "bars": false,
+      "stack": false,
+      "percentage": false,
+      "legend": {
+        "show": true,
+        "values": false,
+        "current": false,
+        "alignAsTable": false,
+        "rightSide": false
+      },
+      "nullPointMode": "null",
+      "steppedLine": false,
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      }
+    },
+    {
+      "id": 13,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 43
+      },
+      "type": "graph",
+      "title": "Fleet Active vs Total Drones",
+      "targets": [
+        {
+          "expr": "aetherwatch_fleet_active_drones",
+          "refId": "A",
+          "legendFormat": "Active"
+        },
+        {
+          "expr": "aetherwatch_fleet_total_drones",
+          "refId": "B",
+          "legendFormat": "Total"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "Drones",
+          "min": 0
+        },
+        {
+          "format": "short",
+          "show": true
+        }
+      ],
+      "xaxis": {
+        "show": true,
+        "mode": "time"
+      },
+      "lines": true,
+      "fill": 1,
+      "linewidth": 2,
+      "pointradius": 2,
+      "points": false,
+      "bars": false,
+      "stack": false,
+      "percentage": false,
+      "legend": {
+        "show": true,
+        "values": true,
+        "current": true,
+        "alignAsTable": true,
+        "rightSide": false
+      },
+      "nullPointMode": "null",
+      "steppedLine": false,
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      }
+    },
+    {
+      "id": 14,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 43
+      },
+      "type": "bargauge",
+      "title": "Missions Completed by Drone",
+      "targets": [
+        {
+          "expr": "aetherwatch_missions_completed_total",
+          "refId": "A",
+          "legendFormat": "{{drone_id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": 0,
+                "color": "blue"
+              },
+              {
+                "value": 5,
+                "color": "green"
+              },
+              {
+                "value": 10,
+                "color": "yellow"
+              }
+            ]
+          }
+        }
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true
+      }
+    }
+  ]
+}

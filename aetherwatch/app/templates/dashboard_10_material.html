@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AetherWatch - Material Dark</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #121212;
+            color: #ffffff;
+            padding: 24px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding: 32px;
+            background: #1e1e1e;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #bb86fc;
+            letter-spacing: 2px;
+        }
+        
+        .header p {
+            color: #b0b0b0;
+            font-size: 0.95em;
+            margin-top: 8px;
+            font-weight: 300;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .card {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #bb86fc, #03dac6);
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            background: #252525;
+        }
+        
+        .card-title {
+            font-size: 0.75em;
+            color: #b0b0b0;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        
+        .card-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #bb86fc;
+        }
+        
+        .drone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        
+        .drone-card {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+        
+        .drone-card:hover {
+            background: #252525;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            transform: scale(1.02);
+        }
+        
+        .drone-id {
+            font-weight: 500;
+            color: #03dac6;
+            margin-bottom: 12px;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .status-indicator.idle { background: #505050; }
+        .status-indicator.active { background: #03dac6; box-shadow: 0 0 8px #03dac6; }
+        .status-indicator.charging { background: #ffb300; box-shadow: 0 0 8px #ffb300; }
+        .status-indicator.error { background: #cf6679; box-shadow: 0 0 8px #cf6679; }
+        
+        .drone-status {
+            font-size: 0.75em;
+            color: #b0b0b0;
+            margin: 6px 0;
+            font-weight: 300;
+        }
+        
+        .drone-battery {
+            width: 100%;
+            height: 4px;
+            background: #2a2a2a;
+            border-radius: 2px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .drone-battery-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #bb86fc, #03dac6);
+            border-radius: 2px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .trace-panel {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 24px;
+            height: 400px;
+            overflow-y: auto;
+            font-family: 'Roboto Mono', monospace;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        .trace-panel::-webkit-scrollbar { width: 8px; }
+        .trace-panel::-webkit-scrollbar-track { background: #2a2a2a; border-radius: 4px; }
+        .trace-panel::-webkit-scrollbar-thumb { background: #505050; border-radius: 4px; }
+        .trace-panel::-webkit-scrollbar-thumb:hover { background: #707070; }
+        
+        .trace-entry {
+            font-size: 0.8em;
+            color: #e0e0e0;
+            margin: 8px 0;
+            padding: 8px 12px;
+            background: #252525;
+            border-radius: 4px;
+            border-left: 3px solid #bb86fc;
+        }
+        
+        .trace-entry .timestamp { color: #b0b0b0; }
+        .trace-entry .span-name { color: #03dac6; }
+        .trace-entry .success { color: #81c784; }
+        .trace-entry .error { color: #cf6679; }
+        
+        h2 {
+            color: #ffffff;
+            text-align: center;
+            margin: 32px 0 24px 0;
+            font-size: 1.5em;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        /* Ripple effect */
+        @keyframes ripple {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AetherWatch</h1>
+        <p>Material Design Interface</p>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <div class="card-title">Active Drones</div>
+            <div class="card-value" id="active-drones">0</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Avg Battery</div>
+            <div class="card-value" id="avg-battery">0%</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Completed</div>
+            <div class="card-value" id="completed-missions">0</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Success Rate</div>
+            <div class="card-value" id="success-rate">0%</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Warnings</div>
+            <div class="card-value" id="collision-warnings">0</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Active Missions</div>
+            <div class="card-value" id="active-missions">0</div>
+        </div>
+    </div>
+
+    <h2>Drone Fleet</h2>
+    <div class="drone-grid" id="drone-grid"></div>
+
+    <h2>System Log</h2>
+    <div class="trace-panel" id="trace-stream"></div>
+
+    <script src="/static/dashboard.js"></script>
+</body>
+</html>

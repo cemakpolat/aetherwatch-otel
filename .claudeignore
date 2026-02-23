@@ -1,0 +1,39 @@
+# Documentation files
+IMPLEMENTATION_COMPLETE.md
+use_case_1.md
+use_case_2.md
+aetherwatch/PROMETHEUS_QUERIES.md
+aetherwatch/SYSTEM_STATUS.md
+aetherwatch/DOCUMENTATION_INDEX.md
+aetherwatch/QUICK_REFERENCE.md
+aetherwatch/DEPLOYMENT.md
+aetherwatch/QUICKSTART.md
+aetherwatch/PROMETHEUS_METRICS.md
+aetherwatch/GRAFANA_DASHBOARD_FIX.md
+aetherwatch/GRAFANA_ACCESS.md
+aetherwatch/SETUP_COMPLETE.md
+aetherwatch/README.md
+
+# Grafana dashboard JSON (large generated files)
+aetherwatch/grafana/dashboards/*.json
+aetherwatch/grafana/provisioning/dashboards/*.json
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Docker volumes and runtime data
+*.log
+tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/

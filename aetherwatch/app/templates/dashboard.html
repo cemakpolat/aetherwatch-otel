@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚁 AETHERWATCH - Autonomous Drone Fleet Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Russo+One&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00d2ff;
+            --secondary-color: #ff6b35;
+            --accent-color: #ffcc00;
+            --success-color: #00ff88;
+            --warning-color: #ffaa00;
+            --error-color: #ff4444;
+            --dark-bg: #0a0e27;
+            --darker-bg: #05071a;
+            --panel-bg: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: #b8c5d6;
+            --border-color: rgba(0, 210, 255, 0.3);
+            --shadow-color: rgba(0, 210, 255, 0.2);
+            --hero-shadow: 0 0 30px rgba(0, 210, 255, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Russo One', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Comic Book Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 80%, rgba(0, 210, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 204, 0, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Speech Bubble Styles */
+        .speech-bubble {
+            position: relative;
+            background: var(--panel-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: var(--hero-shadow);
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid var(--border-color);
+        }
+
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 8px solid var(--panel-bg);
+        }
+
+        /* Header - Hero Style */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: 'COMMAND CENTER';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Bangers', cursive;
+            font-size: 2em;
+            color: rgba(255, 204, 0, 0.3);
+            letter-spacing: 3px;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(2.5em, 8vw, 4.5em);
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            text-shadow: var(--hero-shadow);
+            position: relative;
+            z-index: 2;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 10px var(--primary-color)); }
+            to { filter: drop-shadow(0 0 20px var(--primary-color)); }
+        }
+
+        .header p {
+            font-family: 'Orbitron', monospace;
+            color: var(--text-secondary);
+            font-size: clamp(0.9em, 3vw, 1.2em);
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Comic Panel Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            padding: 0 20px;
+            margin-bottom: 30px;
+        }
+
+        /* Comic Book Panels */
+        .panel {
+            background: var(--panel-bg);
+            border: 3px solid var(--border-color);
+            border-radius: 0;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 95% 100%, 0 100%);
+            padding: 25px;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            border-radius: 0;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 95% 100%, 0 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .panel:hover {
+            transform: translateY(-8px) rotate(-1deg);
+            border-color: var(--primary-color);
+            box-shadow: var(--hero-shadow);
+        }
+
+        .panel:hover::before {
+            opacity: 0.3;
+        }
+
+        .panel h3 {
+            font-family: 'Bangers', cursive;
+            font-size: 1.4em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .panel h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        /* Hero Metrics */
+        .metric {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2em, 5vw, 3em);
+            font-weight: 900;
+            color: var(--success-color);
+            margin: 15px 0 8px 0;
+            text-shadow: 0 0 10px var(--success-color);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .metric-label {
+            font-family: 'Russo One', sans-serif;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Status Indicators - Comic Style */
+        .status-indicator {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .status-indicator::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: statusGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes statusGlow {
+            from { box-shadow: 0 0 5px currentColor; }
+            to { box-shadow: 0 0 15px currentColor; }
+        }
+
+        .status-indicator.active { color: var(--success-color); }
+        .status-indicator.idle { color: var(--warning-color); }
+        .status-indicator.charging { color: var(--primary-color); }
+        .status-indicator.error { color: var(--error-color); }
+
+        /* Drone Grid - Comic Layout */
+        .drone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .drone-card {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.1), rgba(255, 107, 53, 0.1));
+            border: 2px solid var(--primary-color);
+            border-radius: 0;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 90% 100%, 0 100%);
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drone-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .drone-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.3);
+        }
+
+        .drone-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .drone-id {
+            font-family: 'Bangers', cursive;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .drone-status {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin: 6px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Battery Bar - Comic Style */
+        .drone-battery {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            margin: 12px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .drone-battery::before {
+            content: 'POWER';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Bangers', cursive;
+            font-size: 0.6em;
+            color: rgba(255, 255, 255, 0.5);
+            z-index: 1;
+        }
+
+        .drone-battery-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--error-color), var(--warning-color), var(--success-color));
+            transition: width 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .drone-battery-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: energyFlow 2s linear infinite;
+        }
+
+        @keyframes energyFlow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Trace Panel - Mission Log Style */
+        .trace-panel {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(10, 14, 39, 0.8));
+            border: 3px solid var(--secondary-color);
+            border-radius: 0;
+            clip-path: polygon(0 0, 100% 0, 100% 95%, 97% 100%, 0 100%);
+            padding: 25px;
+            height: 450px;
+            overflow-y: auto;
+            grid-column: span 2;
+            position: relative;
+        }
+
+        .trace-panel::before {
+            content: 'MISSION LOG';
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--dark-bg);
+            padding: 5px 15px;
+            font-family: 'Bangers', cursive;
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+            clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+        }
+
+        .trace-entry {
+            font-family: 'Orbitron', monospace;
+            color: var(--success-color);
+            font-size: 0.8em;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary-color);
+            background: rgba(0, 210, 255, 0.05);
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timestamp {
+            color: var(--text-secondary);
+            font-size: 0.75em;
+            margin-right: 10px;
+        }
+
+        .span-name {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .event-type {
+            color: var(--warning-color);
+        }
+
+        .success {
+            color: var(--success-color);
+        }
+
+        .error {
+            color: var(--error-color);
+        }
+
+        /* Environmental Data - Weather Report Style */
+        .env-data {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 204, 0, 0.1));
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 12px 0;
+            position: relative;
+        }
+
+        .env-data::before {
+            content: '🌤️';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 1.5em;
+            background: var(--dark-bg);
+            padding: 5px;
+            border-radius: 50%;
+            border: 2px solid var(--secondary-color);
+        }
+
+        .env-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .env-label {
+            font-family: 'Russo One', sans-serif;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        .env-value {
+            font-family: 'Orbitron', monospace;
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                padding: 0 15px;
+            }
+
+            .trace-panel {
+                grid-column: span 1;
+                height: 350px;
+            }
+
+            .header h1 {
+                font-size: 2.5em;
+            }
+
+            .drone-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            color: var(--text-secondary);
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus states for keyboard navigation */
+        .panel:focus-within,
+        .drone-card:focus-within {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .panel, .drone-card {
+                border: 1px solid black !important;
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header" role="banner">
+        <h1>🚁 AETHERWATCH</h1>
+        <p>Autonomous Drone Fleet Command Center | Powered by OpenTelemetry</p>
+    </header>
+
+    <main class="dashboard-grid" role="main">
+        <!-- Fleet Status Panel -->
+        <section class="panel" aria-labelledby="fleet-status-title">
+            <h3 id="fleet-status-title">📊 Fleet Status</h3>
+            <div class="speech-bubble">
+                <div class="metric-label">Active Drones</div>
+                <div class="metric" id="active-drones" aria-live="polite">0</div>
+
+                <div class="metric-label">Average Battery</div>
+                <div class="metric" id="avg-battery" aria-live="polite">0%</div>
+            </div>
+        </section>
+
+        <!-- Mission Statistics Panel -->
+        <section class="panel" aria-labelledby="mission-stats-title">
+            <h3 id="mission-stats-title">🎯 Mission Statistics</h3>
+            <div class="speech-bubble">
+                <div class="metric-label">Completed Missions</div>
+                <div class="metric" id="completed-missions" aria-live="polite">0</div>
+
+                <div class="metric-label">Success Rate</div>
+                <div class="metric" id="success-rate" aria-live="polite">0%</div>
+            </div>
+        </section>
+
+        <!-- Alerts & Events Panel -->
+        <section class="panel" aria-labelledby="alerts-title">
+            <h3 id="alerts-title">⚠️ Alerts & Events</h3>
+            <div class="speech-bubble">
+                <div class="metric-label">Collision Warnings</div>
+                <div class="metric" id="collision-warnings" aria-live="polite">0</div>
+
+                <div class="metric-label">Active Missions</div>
+                <div class="metric" id="active-missions" aria-live="polite">0</div>
+            </div>
+        </section>
+    </main>
+
+    <section class="dashboard-grid">
+        <!-- Live Trace Stream Panel -->
+        <section class="panel trace-panel" aria-labelledby="trace-stream-title" style="grid-column: span 2;">
+            <h3 id="trace-stream-title">🕒 Live Trace Stream</h3>
+            <div id="trace-stream" aria-live="polite" aria-atomic="false">
+                <div class="loading">Initializing mission log...</div>
+            </div>
+        </section>
+
+        <!-- Environmental Data Panel -->
+        <section class="panel" aria-labelledby="env-data-title">
+            <h3 id="env-data-title">🌤️ Environmental Data</h3>
+            <div class="env-data">
+                <div class="env-item">
+                    <span class="env-label">Wind Speed:</span>
+                    <span class="env-value" id="wind-speed">0 m/s</span>
+                </div>
+                <div class="env-item">
+                    <span class="env-label">Visibility:</span>
+                    <span class="env-value" id="visibility">1000m</span>
+                </div>
+                <div class="env-item">
+                    <span class="env-label">Temperature:</span>
+                    <span class="env-value" id="temperature">22°C</span>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <!-- Active Drone Fleet Panel -->
+    <section class="panel" aria-labelledby="drone-fleet-title">
+        <h3 id="drone-fleet-title">🚁 Active Drone Fleet</h3>
+        <div class="drone-grid" id="drone-grid" role="grid" aria-live="polite">
+            <div class="loading">Scanning for active drones...</div>
+        </div>
+    </section>
+
+    <script>
+        // Configuration
+        const UPDATE_INTERVALS = {
+            dashboard: 2000,  // 2 seconds
+            traces: 3000,     // 3 seconds
+            drones: 2000      // 2 seconds
+        };
+
+        // API endpoints
+        const API_ENDPOINTS = {
+            fleetStatus: '/api/fleet-status',
+            droneStatus: '/api/drone-status',
+            recentTraces: '/api/recent-traces'
+        };
+
+        // Status color mapping
+        const STATUS_COLORS = {
+            'idle': 'idle',
+            'delivering': 'active',
+            'charging': 'charging',
+            'emergency': 'error'
+        };
+
+        // Utility functions
+        function formatNumber(num, decimals = 0) {
+            return Number(num).toFixed(decimals);
+        }
+
+        function formatPercentage(value) {
+            return formatNumber(value * 100, 1) + '%';
+        }
+
+        function createTraceEntry(trace) {
+            const entry = document.createElement('div');
+            entry.className = 'trace-entry';
+
+            let statusClass = 'success';
+            if (trace.status === 'error') statusClass = 'error';
+            else if (trace.status === 'pending') statusClass = 'event-type';
+
+            entry.innerHTML = `
+                <span class="timestamp">[${trace.timestamp}]</span>
+                <span class="span-name">[${trace.span}]</span>
+                <span class="${statusClass}">${trace.message}</span>
+            `;
+
+            return entry;
+        }
+
+        function createDroneCard(drone) {
+            const card = document.createElement('div');
+            card.className = 'drone-card';
+            card.setAttribute('role', 'gridcell');
+
+            const statusColor = STATUS_COLORS[drone.status] || 'idle';
+
+            card.innerHTML = `
+                <div class="drone-id">
+                    <span class="status-indicator ${statusColor}" aria-hidden="true"></span>
+                    ${drone.drone_id}
+                </div>
+                <div class="drone-status">Status: ${drone.status}</div>
+                <div class="drone-status">Position: ${formatNumber(drone.position.x)}, ${formatNumber(drone.position.y)}</div>
+                <div class="drone-battery">
+                    <div class="drone-battery-fill" style="width: ${drone.battery}%"></div>
+                </div>
+                <div class="drone-status">Battery: ${formatNumber(drone.battery)}%</div>
+                <div class="drone-status">Deliveries: ${drone.stats.deliveries_completed}</div>
+            `;
+
+            return card;
+        }
+
+        // API functions
+        async function updateDashboard() {
+            try {
+                const response = await fetch(API_ENDPOINTS.fleetStatus);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+
+                // Update metrics with smooth transitions
+                document.getElementById('active-drones').textContent = data.active_drones;
+                document.getElementById('avg-battery').textContent = formatNumber(data.average_battery) + '%';
+                document.getElementById('completed-missions').textContent = data.completed_missions;
+                document.getElementById('success-rate').textContent = formatPercentage(data.success_rate);
+                document.getElementById('collision-warnings').textContent = data.collision_warnings;
+                document.getElementById('active-missions').textContent = data.active_missions;
+
+            } catch (error) {
+                console.error('Dashboard update error:', error);
+                // Could add error state handling here
+            }
+        }
+
+        async function updateTraces() {
+            try {
+                const response = await fetch(API_ENDPOINTS.recentTraces);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                const tracePanel = document.getElementById('trace-stream');
+
+                // Clear existing traces
+                tracePanel.innerHTML = '';
+
+                // Add new traces (limit to 20 most recent)
+                data.traces.slice(0, 20).forEach(trace => {
+                    tracePanel.appendChild(createTraceEntry(trace));
+                });
+
+                // Scroll to bottom for new entries
+                tracePanel.scrollTop = tracePanel.scrollHeight;
+
+            } catch (error) {
+                console.error('Trace update error:', error);
+                document.getElementById('trace-stream').innerHTML =
+                    '<div class="loading">Mission log temporarily unavailable...</div>';
+            }
+        }
+
+        async function updateDroneStatus() {
+            try {
+                const response = await fetch(API_ENDPOINTS.droneStatus);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const drones = await response.json();
+                const droneGrid = document.getElementById('drone-grid');
+
+                // Clear existing drones
+                droneGrid.innerHTML = '';
+
+                // Add drone cards
+                drones.forEach(drone => {
+                    droneGrid.appendChild(createDroneCard(drone));
+                });
+
+            } catch (error) {
+                console.error('Drone status update error:', error);
+                document.getElementById('drone-grid').innerHTML =
+                    '<div class="loading">Drone scan temporarily unavailable...</div>';
+            }
+        }
+
+        // Initialization
+        function initializeDashboard() {
+            // Initial data load
+            updateDashboard();
+            updateTraces();
+            updateDroneStatus();
+
+            // Set up periodic updates
+            setInterval(updateDashboard, UPDATE_INTERVALS.dashboard);
+            setInterval(updateTraces, UPDATE_INTERVALS.traces);
+            setInterval(updateDroneStatus, UPDATE_INTERVALS.drones);
+
+            console.log('🚁 AetherWatch Command Center initialized');
+        }
+
+        // Start the dashboard when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeDashboard);
+        } else {
+            initializeDashboard();
+        }
+
+        // Handle visibility change to pause/resume updates when tab is not visible
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                console.log('Dashboard paused - tab not visible');
+            } else {
+                console.log('Dashboard resumed - updating data');
+                // Force immediate update when tab becomes visible
+                updateDashboard();
+                updateTraces();
+                updateDroneStatus();
+            }
+        });
+    </script>
+</body>
+</html>
